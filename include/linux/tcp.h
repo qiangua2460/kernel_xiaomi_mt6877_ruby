@@ -227,6 +227,7 @@ struct tcp_sock {
 	u8	compressed_ack;
 	u8	tlp_retrans:1,	/* TLP is a retransmission */
 		unused_1:7;
+	u8	fast_ack_mode:2; /* which fast ack mode ? */
 	u32	chrono_start;	/* Start time in jiffies of a TCP chrono */
 	u32	chrono_stat[3];	/* Time in jiffies for chrono_stat stats */
 	u8	chrono_type:2,	/* current chronograph type */
@@ -377,6 +378,10 @@ struct tcp_sock {
 	} rcvq_space;
 
 /* TCP-specific MTU probe information. */
+
+	/* BBR/PLB 相关补丁成员，stub实现 */
+	u64 tcp_clock_cache;
+	u64 tcp_wstamp_ns;
 	struct {
 		u32		  probe_seq_start;
 		u32		  probe_seq_end;
@@ -400,6 +405,7 @@ struct tcp_sock {
 	 */
 	struct request_sock *fastopen_rsk;
 	u32	*saved_syn;
+	bool tlp_orig_data_app_limited;
 };
 
 enum tsq_enum {
